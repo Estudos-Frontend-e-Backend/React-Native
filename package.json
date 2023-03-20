@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@expo-google-fonts/montserrat": "^0.2.3",
+    "expo-font": "^11.1.1"
+  }
+}
