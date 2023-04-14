@@ -47,9 +47,9 @@ export function App() {
         <Text style={[styles.temperatureText, { fontSize: 14 }]}>°C</Text>
       </View>
 
-      <View style={styles.cardView}>
+      {/* <View style={styles.cardView}>
         <MainCard title={"Bom dia"}></MainCard>
-      </View>
+      </View> */}
     </View>
   );
 }
