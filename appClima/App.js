@@ -7,8 +7,8 @@ import { EvilIcons } from "@expo/vector-icons";
 import MainCard from "./components/MainCard/index";
 import InfoCard from "./components/InfoCard/index";
 import * as Location from 'expo-location';
+import getCurrentWeather from "./api/ConsultApi";
 
-import getCurrentWeather from './api/ConsultApi';
 
 export default function App() {
 
@@ -18,7 +18,7 @@ export default function App() {
   const [currentHour, setCurrentHour] = useState("12:00");
 
   const [wind, setWind] = useState("65");
-  const [umidity, setUmidity] = useState("65");
+  const [humidity, setHumidity] = useState("65");
   const [tempMin, setTempMin] = useState("21");
   const [tempMax, setTempMax] = useState("28");
   const [locationCoords ,setLocationCoords] = useState([]);
@@ -94,6 +94,18 @@ export default function App() {
     },
   });
 
+  async function setCurrentWeather() {
+    await getLocation(location)
+
+    const data = await getCurrentWeather(locationCoords)
+
+    setCurrentTemperature(data[0])
+    setTempMin(data[1])
+    setTempMax(data[2])
+    setLocation(data[3])
+    setWind(data[4])
+  } 
+
   async function getLocation(){
     let {status} = await Location.requestBackgroundPermissionsAsync()
     if(status !== 'granted') {
@@ -105,14 +117,12 @@ export default function App() {
   }
 
   useEffect(()=> {
-    getLocation()
-    console.log(locationCoords)
-    getCurrentWeather(locationCoords)
+    setCurrentWeather()
   }, []);
   
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.refreshButton}>
+      <TouchableOpacity onPress={()=> setCurrentWeather()} style={styles.refreshButton}>
         <EvilIcons
           name="refresh"
           size={30}
@@ -155,7 +165,7 @@ export default function App() {
         <Text style={styles.infoText}>Informações adicionais</Text>
         <View style={styles.infoCards}>
           <InfoCard title={"Vento"} value={wind + " m/h"}></InfoCard>
-          <InfoCard title={"Umidade"} value={umidity + " %"}></InfoCard>
+          <InfoCard title={"Humidade"} value={humidity + " %"}></InfoCard>
           <InfoCard title={"Temp. Min"} value={tempMin}></InfoCard>
           <InfoCard title={"Temp. Max"} value={tempMax}></InfoCard>
         </View>
